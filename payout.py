@@ -1,11 +1,14 @@
 from beem import Hive
 from beem import exceptions
 import getpass
+from hiveengine.api import Api
 from hiveengine.wallet import Wallet
 import pandas as pd
 from time import sleep
 
 hive = Hive(node = "https://api.deathwing.me")
+
+setApi = Api(url = "https://engine.rishipanthee.com/")
 
 name = input("Enter wallet name: ")
 
@@ -32,7 +35,7 @@ def unlockWallet():
 def payout():
   activeKey = hive.wallet.getKeyForAccount(name, "active")
   HVE = Hive(node = "https://api.deathwing.me", keys = [activeKey])
-  wallet = Wallet(name, blockchain_instance = HVE)
+  wallet = Wallet(name, api=setApi, blockchain_instance = HVE)
 
   file = input("Enter CSV file name: ")
 

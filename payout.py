@@ -35,7 +35,7 @@ def payout():
 	decPoint = input("Enter decimal point(.or,): ")
 	
 	df = pd.read_csv(file, decimal = decPoint)
-	df = df.fillna("null")
+	df["account"] = df["account"].fillna("null")
 	df["amount"] = df["amount"].astype(float)
 	
 	while(len(df) > 0) : 

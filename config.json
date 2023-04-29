@@ -1,0 +1,37 @@
+{
+    "payoutToken": "ALIVE",
+    "walletName": "youarealive",
+    "node":"https://api.deathwing.me",
+	"holders": [
+		"zombiepatrol",
+		"aliveprojects",
+		"youarealive",
+		"alive.chat",
+		"aliveandthriving",
+		"iamalivechalleng",
+		"wearealive",
+		"null"
+	],
+    "tokens": [
+    	{
+    		"symbol": "LOLZ",
+    		"minOwnedStake": 1.0,
+    		"amount": 5.00
+    	},
+    	{
+    		"symbol": "BRO",
+    		"minOwnedStake": 1.0,
+    		"amount": 0.43
+    	},
+    	{
+    		"symbol": "PGM",
+    		"minOwnedStake": 1.0,
+    		"amount": 5.00
+    	},
+    	{
+    		"symbol": "DHEDGE",
+    		"minOwnedStake": 1.0,
+    		"amount": 5.00
+    	}
+    ]
+}

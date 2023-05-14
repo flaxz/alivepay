@@ -16,7 +16,7 @@ def genCSV() :
 	year = now.strftime("%y")
 	fileName = payToken + "-" + month + day + year + ".csv"
 	print("File name:", fileName)
-	path = r"~/sync/pay/"
+	path = r"~/hivealive/pay/"
 	try :
 		df.to_csv(path+fileName, index = False)
 		print("File successfully created: " + fileName)

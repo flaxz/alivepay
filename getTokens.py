@@ -6,7 +6,7 @@ from hiveengine.tokenobject import Token
 import time, datetime, json
 
 # Instantiate Hive-Engine API
-api = Api(url = "https://engine.rishipanthee.com/")
+api = Api()
 
 # Function to generate CSV file with Accounts / Amounts / Symbol (and Memo) from Datadf
 def genCSV() :
@@ -16,11 +16,12 @@ def genCSV() :
 	year = now.strftime("%y")
 	fileName = payToken + "-" + month + day + year + ".csv"
 	print("File name:", fileName)
+	path = r"~/sync/pay/"
 	try :
-		df.to_csv(fileName, index = False)
+		df.to_csv(path+fileName, index = False)
 		print("File successfully created: " + fileName)
 	except :
-		print("Can't create CSV file, please your your user right in this folder.")
+		print("Can't create CSV file, please change your user right in this folder.")
 
 # Remove project holders to just have the users holders
 def removeHolders(dropHolders) :

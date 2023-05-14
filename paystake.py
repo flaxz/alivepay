@@ -34,7 +34,7 @@ def payout():
 	file = input("Enter CSV file name: ")
 	decPoint = input("Enter decimal point(.or,): ")
 	
-	path = r"~/hivealive/pay/"
+	path = r"~/alivepay/pay/"
 
 	df = pd.read_csv(path+file, decimal = decPoint)
 	df["amount"] = df["amount"].astype(float)

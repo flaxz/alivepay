@@ -66,6 +66,6 @@ year = now.strftime("%y")
 fileName = payToken + "-" + month + day + year + ".csv"
 print("File name:", fileName)
 
-path = r"~/hivealive/pay/"
+path = r"~/alivepay/pay/"
 
 df.to_csv(path+fileName, index = False)

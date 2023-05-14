@@ -33,8 +33,10 @@ def unlockWallet():
 def payout():
 	file = input("Enter CSV file name: ")
 	decPoint = input("Enter decimal point(.or,): ")
+	
+	path = r"~/sync/pay/"
 
-	df = pd.read_csv(file, decimal = decPoint)
+	df = pd.read_csv(path+file, decimal = decPoint)
 	df["amount"] = df["amount"].astype(float)
 	
 	while(len(df) > 0) : 

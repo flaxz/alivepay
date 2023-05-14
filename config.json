@@ -1,7 +1,7 @@
 {
     "payoutToken": "ALIVE",
     "walletName": "youarealive",
-    "node":"https://api.deathwing.me",
+    "node":"https://anyx.io",
 	"holders": [
 		"zombiepatrol",
 		"aliveprojects",

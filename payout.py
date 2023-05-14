@@ -34,7 +34,9 @@ def payout():
 	file = input("Enter CSV file name: ")
 	decPoint = input("Enter decimal point(.or,): ")
 	
-	df = pd.read_csv(file, decimal = decPoint)
+	path = r"~/sync/pay/"
+	
+	df = pd.read_csv(path+file, decimal = decPoint)
 	df["account"] = df["account"].fillna("null")
 	df["amount"] = df["amount"].astype(float)
 	

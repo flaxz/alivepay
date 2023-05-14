@@ -3,7 +3,7 @@ from hiveengine.api import Api
 from hiveengine.tokenobject import Token
 import datetime
 
-api = Api(url = "https://engine.rishipanthee.com/")
+api = Api()
 
 token = str("ALIVEM")
 getHolders = str("zombiepatrol,aliveprojects,youarealive,alive.chat,aliveandthriving,iamalivechalleng,wearealive,null")
@@ -66,4 +66,6 @@ year = now.strftime("%y")
 fileName = payToken + "-" + month + day + year + ".csv"
 print("File name:", fileName)
 
-df.to_csv(fileName, index = False)
+path = r"~/sync/pay/"
+
+df.to_csv(path+fileName, index = False)

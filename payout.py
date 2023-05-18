@@ -1,7 +1,6 @@
 from beem import Hive
 from beem import exceptions
 from time import sleep
-
 import getpass
 import pandas as pd
 import json

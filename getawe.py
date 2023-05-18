@@ -3,7 +3,7 @@ from hiveengine.api import Api
 from hiveengine.tokenobject import Token
 import datetime
 
-api = Api()
+api = Api(url = "https://engine.rishipanthee.com/")
 
 token = str("ALIVEM")
 getHolders = str("zombiepatrol,aliveprojects,youarealive,alive.chat,aliveandthriving,iamalivechalleng,wearealive,null")
@@ -35,7 +35,7 @@ dropHolders = getHolders.split(',')
 while len(dropHolders) >= 1:
   indexHolder = df[df["account"] == dropHolders[0]].index
   df.drop(indexHolder, inplace = True)
-  print("Successfully removed:", dropHolders[0])
+  print("Successfully removed: " + dropHolders[0])
   del dropHolders[0]
 
 ptk = Token(payToken, api = api)
@@ -51,7 +51,7 @@ df.drop(indexZero2, inplace = True)
 df["amount"] = df["amount"].round(payDec)
 
 sumAmount = df["amount"].sum().round(payDec)
-print("Sum payout:", sumAmount, payToken)
+print("Sum payout: " + sumAmount + payToken)
 df["amount"] = df["amount"].astype(str)
 
 df = df.assign(symbol = payToken)
@@ -64,7 +64,7 @@ month = now.strftime("%b")
 day = now.strftime("%d")
 year = now.strftime("%y")
 fileName = payToken + "-" + month + day + year + ".csv"
-print("File name:", fileName)
+print("File name: " + fileName)
 
 path = r"~/alivepay/pay/"
 

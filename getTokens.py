@@ -1,12 +1,10 @@
 import pandas as pd
-
 from hiveengine.api import Api
 from hiveengine.tokenobject import Token
-
 import time, datetime, json
 
 # Instantiate Hive-Engine API
-api = Api()
+api = Api(url = "https://engine.rishipanthee.com/")
 
 # Function to generate CSV file with Accounts / Amounts / Symbol (and Memo) from Datadf
 def genCSV() :
@@ -21,14 +19,14 @@ def genCSV() :
 		df.to_csv(path+fileName, index = False)
 		print("File successfully created: " + fileName)
 	except :
-		print("Can't create CSV file, please change your user right in this folder.")
+		print("Can't create CSV file, please change your user rights in this folder: " + path)
 
 # Remove project holders to just have the users holders
 def removeHolders(dropHolders) :
     for holder in dropHolders:
         indexHolder = df[df["account"] == holder].index
         df.drop(indexHolder, inplace = True)
-        print("Successfully removed:", holder)
+        print("Successfully removed: " + holder)
 
 def getTokenPrecision(symbol) :
 	tk = Token(symbol, api = api)
@@ -41,7 +39,7 @@ jsonfile = open('./config.json')
 config = json.load(jsonfile)
 jsonfile.close
 
-payMemo = str("Daily payout based on your "+config['payoutToken']+" stake.")
+payMemo = str("Daily payout based on your " + config['payoutToken'] + " stake.")
 
 # Get list of all token holders
 holders = api.find_all("tokens", "balances", query = {"symbol": config['payoutToken']})
@@ -83,14 +81,14 @@ for payoutToken in config['tokens'] :
     sumStake = float(df["ownedStake"].sum())
 
     df = df.assign(amount = (payAmount * (df.sum(axis = 1, numeric_only = True) / sumStake)))
-    df["amount"] = df["amount"]
+    df["amount"] = df["amount"].astype(float)
     indexZero2 = df[df["amount"] < 0.00000001].index
     df.drop(indexZero2, inplace = True)
     df["amount"] = df["amount"].round(payDec)
 
     sumAmount = df["amount"].sum().round(payDec)
-    print("Sum payout:", sumAmount, payToken)
-    df["amount"] = df["amount"]
+    print("Sum payout: " + sumAmount + payToken)
+    df["amount"] = df["amount"].astype(str)
 
     df = df.assign(symbol = payToken)
     df = df.assign(memo = payMemo)

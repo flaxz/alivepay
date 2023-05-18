@@ -17,16 +17,16 @@ def genCSV() :
 	path = r"~/alivepay/pay/"
 	try :
 		df.to_csv(path+fileName, index = False)
-		print("File successfully created: " + fileName)
+		print("File successfully created: ", fileName)
 	except :
-		print("Can't create CSV file, please change your user rights in this folder: " + path)
+		print("Can't create CSV file, please change your user rights in this folder: ", path)
 
 # Remove project holders to just have the users holders
 def removeHolders(dropHolders) :
     for holder in dropHolders:
         indexHolder = df[df["account"] == holder].index
         df.drop(indexHolder, inplace = True)
-        print("Successfully removed: " + holder)
+        print("Successfully removed: ", holder)
 
 def getTokenPrecision(symbol) :
 	tk = Token(symbol, api = api)
@@ -87,7 +87,7 @@ for payoutToken in config['tokens'] :
     df["amount"] = df["amount"].round(payDec)
 
     sumAmount = df["amount"].sum().round(payDec)
-    print("Sum payout: " + sumAmount + payToken)
+    print("Sum payout: ", sumAmount, payToken)
     df["amount"] = df["amount"].astype(str)
 
     df = df.assign(symbol = payToken)

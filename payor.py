@@ -20,6 +20,40 @@ hive = Hive(node="https://anyx.io", nobroadcast=False, num_retries=3)
 he_node = "https://api.primersion.com/"
 he_api = Api(url=he_node)
 
+## Create databases if they don't exist.
+# Connect to the database (create it if it doesn't exist)
+conn = sqlite3.connect('processed_files.db')
+
+# Create a table with the specified fields
+conn.execute('''CREATE TABLE IF NOT EXISTS files
+             (id INTEGER PRIMARY KEY,
+             date_added TEXT,
+             date_processed TEXT,
+             file_name TEXT)''')
+
+# Commit the changes and close the connection
+conn.commit()
+conn.close()
+
+
+# Connect to the database (create it if it doesn't exist)
+conn = sqlite3.connect('payments.db')
+
+# Create a table with the specified fields
+conn.execute('''CREATE TABLE IF NOT EXISTS transactions
+             (id INTEGER PRIMARY KEY,
+             account TEXT NOT NULL,
+             token TEXT NOT NULL,
+             amount REAL NOT NULL,
+             memo TEXT,
+             time_entered TEXT NOT NULL,
+             time_paid TEXT,
+             txid TEXT)''')
+
+# Commit the changes and close the connection
+conn.commit()
+conn.close()
+
 def post_discord_message(username, message_body, WEBHOOK_URL):
     payload = {
         "username": username,
@@ -77,9 +111,9 @@ def add_new_files():
     return found_files
 
 def add_csv_to_database(csv_file, database_file):
-    print("File:" + csv_file)
+    print("File added: " + csv_file)
     path = file_to_read = "./pay/" + csv_file
-    print(file_to_read)
+    #print(file_to_read)
     # Open the CSV file and read the items
     with open(file_to_read, 'r') as file:
         reader = csv.reader(file)
@@ -90,7 +124,7 @@ def add_csv_to_database(csv_file, database_file):
     cursor = connection.cursor()
 
     for item in items:
-        print(item)
+        #print(item)
         if item == []:
             continue
 
@@ -137,7 +171,7 @@ def process_files(files):
     conn = sqlite3.connect('processed_files.db')
     c = conn.cursor()
     for file in files:
-        print(file)
+        #print(file)
 
         add_csv_to_database(file[1], "payments.db")
 
@@ -222,7 +256,7 @@ def payout(file):
 
     while (len(df) > 0):
 
-        print(len(df))
+        print("Payments left to process: " + str(len(df)))
 
         users = df[:25]
         pay = json.loads(users.to_json(orient="records"));
@@ -257,7 +291,7 @@ def payout(file):
 
 
                 pass_test = 1
-                print(json.dumps(result))
+                #print(json.dumps(result))
 
 
             except Exception as e:
@@ -275,8 +309,8 @@ def payout(file):
                     trace[0], trace[1], trace[2], trace[3]))
 
                 print("Exception type : %s " % ex_type.__name__)
-                print("Exception message : %s" % ex_value)
-                print("Stack trace : %s" % stack_trace)
+                #print("Exception message : %s" % ex_value)
+                #print("Stack trace : %s" % stack_trace)
                 print("Payment did not process.  Trying again in 5 seconds...")
                 time.sleep(5)
 
@@ -285,7 +319,8 @@ def payout(file):
         connection = sqlite3.connect('payments.db')
         cursor = connection.cursor()
         now = datetime.now()
-        transaction_number = result
+        transaction_number = result["trx_id"]
+        #print(transaction_number)
 
         for payment in pay:
             id = payment["id"]
@@ -334,9 +369,8 @@ if __name__ == "__main__":
         if sum_of_payments > balance:
             issues = issues + 1
             print(token + ": Sum of Payments = " + str(sum_of_payments)+ ", ballance = " + str(balance) + ". Add " + str(sum_of_payments - balance) + " " + token + " to continue.")
-        #else:
-        #    print(
-        #        token + ": Sum of Payments = " + str(sum_of_payments) + ", ballance = " + str(balance) + ". Ready to payout.")
+        else:
+            print(token + ": Sum of Payments = " + str(sum_of_payments) + ", ballance = " + str(balance) + ". Ready to payout.")
 
 # if any balances are too low, exit script.
     if issues > 0:
@@ -346,12 +380,18 @@ if __name__ == "__main__":
 
 # if all balances are ok, start paying out payments.
     unpaid_payments = get_unpaid_payments()
-    print(type(unpaid_payments))
-    for payment in unpaid_payments:
-        print(payment)
+
+    if len(unpaid_payments) == 0:
+        print("No unpaid payments to process.")
+        exit()
 
     # write payments to temporary csv file
 
     write_list_to_csv(unpaid_payments, "temp_payments_file.csv")
 
+    # run the temporary csv file through payout function.
+
+    print("\nBeginning payouts.\n")
     payout("temp_payments_file.csv")
+
+    print("All payments have been made.")

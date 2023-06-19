@@ -1,7 +1,7 @@
 {
     "payoutToken": "ALIVE",
     "walletName": "youarealive",
-    "node":"https://anyx.io",
+    "node":"https://hived.emre.sh",
 	"holders": [
 		"zombiepatrol",
 		"aliveprojects",

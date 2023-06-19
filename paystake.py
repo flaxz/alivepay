@@ -33,7 +33,7 @@ def payout():
 	file = input("Enter CSV file name: ")
 	decPoint = input("Enter decimal point(.or,): ")
 	
-	path = r"~/alivepay/pay/"
+	path = r"~/alivepay/stake/"
 
 	df = pd.read_csv(path+file, decimal = decPoint)
 	df["account"] = df["account"].fillna("null")

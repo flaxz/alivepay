@@ -16,7 +16,7 @@
     	{
     		"symbol": "LOLZ",
     		"minOwnedStake": 1.0,
-    		"amount": 5.00
+    		"amount": 10.00
     	},
     	{
     		"symbol": "BRO",
@@ -26,12 +26,12 @@
     	{
     		"symbol": "PGM",
     		"minOwnedStake": 1.0,
-    		"amount": 5.00
+    		"amount": 10.00
     	},
     	{
     		"symbol": "DHEDGE",
     		"minOwnedStake": 1.0,
-    		"amount": 5.00
+    		"amount": 10.00
     	}
     ]
 }

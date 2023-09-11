@@ -16,7 +16,7 @@ from datetime import datetime
 
 testing = "NO"
 
-hive = Hive(node="https://hived.emre.sh", nobroadcast=False, num_retries=3)
+hive = Hive(node="https://hived.emre.sh", nobroadcast=False, expiration = 60, num_retries=3)
 he_node = "https://engine.rishipanthee.com/"
 he_api = Api(url=he_node)
 
@@ -53,18 +53,6 @@ conn.execute('''CREATE TABLE IF NOT EXISTS transactions
 # Commit the changes and close the connection
 conn.commit()
 conn.close()
-
-def post_discord_message(username, message_body, WEBHOOK_URL):
-    payload = {
-        "username": username,
-        "content": message_body
-    }
-
-    try:
-        requests.post(WEBHOOK_URL, data=payload)
-
-    except:
-        print('Error while sending discord message. Check configs.')
 
 def get_balance(username, token_name):
     wallet = Wallet(username, api=he_api, blockchain_instance=hive)
@@ -343,7 +331,7 @@ def payout(file):
 if __name__ == "__main__":
 
     if testing == "YES":
-        name = "captaincryptic"
+        name = "youarealive"
     else:
         name = input("Enter wallet name: ")
         unlockWallet()

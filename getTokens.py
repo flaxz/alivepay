@@ -14,7 +14,7 @@ def genCSV() :
 	year = now.strftime("%y")
 	fileName = payToken + "-" + month + day + year + ".csv"
 	print("File name:", fileName)
-	path = r"~/alivepay/pay/"
+	path = r"./pay/"
 	try :
 		df.to_csv(path+fileName, index = False)
 		print("File successfully created: ", fileName)
@@ -73,7 +73,7 @@ for payoutToken in config['tokens'] :
     df.drop(indexZero, inplace = True)
     df.drop(columns = ["symbol", "stake", "delegationsOut", "pendingUndelegations"], inplace = True)
 
-    df.sort_values(by=["ownedStake"], inplace = True, ascending = False)
+    df.sort_values(by = ["ownedStake"], inplace = True, ascending = False)
 
     # Get decimal numbers from payout token
     payDec = getTokenPrecision(payToken)

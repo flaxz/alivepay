@@ -3,69 +3,83 @@ from hiveengine.api import Api
 from hiveengine.tokenobject import Token
 import datetime
 
+# Hive-engine node
+
 api = Api(url = "https://engine.rishipanthee.com/")
+
+# Config settings
 
 token = str("ALIVEM")
 getHolders = str("zombiepatrol,aliveprojects,youarealive,alive.chat,aliveandthriving,iamalivechalleng,wearealive,null")
 payToken = str("AWESOME")
 payAmount = float(0.043)
 payMemo = str("Daily payout based on your ALIVEM stake.")
+minDecimal = float(0.00000001)
 
-holders = api.find_all("tokens", "balances", query = {"symbol": token})
+# Script
 
-df = pd.DataFrame(holders)
-df.drop(columns = ["_id", "balance", "pendingUnstake", "delegationsIn"], inplace = True)
+def main():
 
-df["pendingUndelegations"] = df["pendingUndelegations"].astype(float)
-df["stake"] = df["stake"].astype(float)
-df["delegationsOut"] = df["delegationsOut"].astype(float)
+  holders = api.find_all("tokens", "balances", query = {"symbol": token})
 
-df = df.assign(ownedStake = df.sum(axis = 1, numeric_only = True))
+  df = pd.DataFrame(holders)
+  df.drop(columns = ["_id", "balance", "pendingUnstake", "delegationsIn"], inplace = True)
 
-tk = Token(token, api = api)
-tokenInfo = tk.get_info()
-decNum = tokenInfo["precision"]
-df["ownedStake"] = df["ownedStake"].round(decNum)
+  df["pendingUndelegations"] = df["pendingUndelegations"].astype(float)
+  df["stake"] = df["stake"].astype(float)
+  df["delegationsOut"] = df["delegationsOut"].astype(float)
 
-df.drop(columns = ["symbol", "stake", "delegationsOut", "pendingUndelegations"], inplace = True)
+  df = df.assign(ownedStake = df.sum(axis = 1, numeric_only = True))
 
-df.sort_values(by=["ownedStake"], inplace = True, ascending = False)
+  tk = Token(token, api = api)
+  tokenInfo = tk.get_info()
+  decNum = tokenInfo["precision"]
+  df["ownedStake"] = df["ownedStake"].round(decNum)
 
-dropHolders = getHolders.split(',')
-while len(dropHolders) >= 1:
-  indexHolder = df[df["account"] == dropHolders[0]].index
-  df.drop(indexHolder, inplace = True)
-  print("Successfully removed: ", dropHolders[0])
-  del dropHolders[0]
+  df.drop(columns = ["symbol", "stake", "delegationsOut", "pendingUndelegations"], inplace = True)
 
-ptk = Token(payToken, api = api)
-payTokenInfo = ptk.get_info()
-payDec = payTokenInfo["precision"]
+  df.sort_values(by = ["ownedStake"], inplace = True, ascending = False)
 
-sumStake = float(df["ownedStake"].sum())
+  dropHolders = getHolders.split(',')
+  while len(dropHolders) >= 1:
+    indexHolder = df[df["account"] == dropHolders[0]].index
+    df.drop(indexHolder, inplace = True)
+    print("Successfully removed: ", dropHolders[0])
+    del dropHolders[0]
 
-df = df.assign(amount = (payAmount * (df.sum(axis = 1, numeric_only = True) / sumStake)))
-df["amount"] = df["amount"].astype(float)
-indexZero2 = df[df["amount"] < 0.00000001].index
-df.drop(indexZero2, inplace = True)
-df["amount"] = df["amount"].round(payDec)
+  ptk = Token(payToken, api = api)
+  payTokenInfo = ptk.get_info()
+  payDec = payTokenInfo["precision"]
 
-sumAmount = df["amount"].sum().round(payDec)
-print("Sum payout: ", sumAmount, payToken)
-df["amount"] = df["amount"].astype(str)
+  sumStake = float(df["ownedStake"].sum())
 
-df = df.assign(symbol = payToken)
-df = df.assign(memo = payMemo)
+  df = df.assign(amount = (payAmount * (df.sum(axis = 1, numeric_only = True) / sumStake)))
+  df["amount"] = df["amount"].astype(float)
+  indexZero2 = df[df["amount"] < minDecimal].index
+  df.drop(indexZero2, inplace = True)
+  df["amount"] = df["amount"].round(payDec)
 
-df.drop(columns = ["ownedStake"], inplace = True)
+  sumAmount = df["amount"].sum().round(payDec)
+  print("Sum payout: ", sumAmount, payToken)
+  df["amount"] = df["amount"].astype(str)
 
-now = datetime.datetime.now()
-month = now.strftime("%b")
-day = now.strftime("%d")
-year = now.strftime("%y")
-fileName = payToken + "-" + month + day + year + ".csv"
-print("File name: ", fileName)
+  df = df.assign(symbol = payToken)
+  df = df.assign(memo = payMemo)
 
-path = r"~/alivepay/pay/"
+  df.drop(columns = ["ownedStake"], inplace = True)
 
-df.to_csv(path+fileName, index = False)
+  now = datetime.datetime.now()
+  month = now.strftime("%b")
+  day = now.strftime("%d")
+  year = now.strftime("%y")
+  fileName = payToken + "-" + month + day + year + ".csv"
+  print("File name: ", fileName)
+
+  path = r"./pay/"
+
+  df.to_csv(path+fileName, index = False)
+
+if __name__ == "__main__":
+  
+  main()
+

@@ -1,7 +1,7 @@
 {
     "payoutToken": "ALIVE",
     "walletName": "youarealive",
-    "node":"https://hived.emre.sh",
+    "node":"https://api.deathwing.me",
 	"holders": [
 		"zombiepatrol",
 		"aliveprojects",

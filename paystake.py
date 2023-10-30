@@ -5,7 +5,7 @@ import getpass
 import pandas as pd
 import json
 
-hive = Hive(node = "https://api.deathwing.me", nobroadcast=False, expiration = 60, num_retries = 3)
+hive = Hive(node = "https://anyx.io", nobroadcast=False, expiration = 60, num_retries = 3)
 
 name = input("Enter wallet name: ")
 

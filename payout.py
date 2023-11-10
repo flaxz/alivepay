@@ -17,7 +17,7 @@ from datetime import datetime
 testing = "NO"
 
 hive = Hive(node="https://anyx.io", nobroadcast=False, expiration = 60, num_retries=3)
-he_node = "https://engine.rishipanthee.com/"
+he_node = "https://api.primersion.com/"
 he_api = Api(url=he_node)
 
 ## Create databases if they don't exist.

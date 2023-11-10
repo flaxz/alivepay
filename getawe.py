@@ -5,7 +5,7 @@ import datetime
 
 # Hive-engine node
 
-api = Api(url = "https://engine.rishipanthee.com/")
+api = Api(url = "https://api.primersion.com/")
 
 # Config settings
 
